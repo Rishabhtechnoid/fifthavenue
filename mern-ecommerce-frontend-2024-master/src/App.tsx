@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
@@ -43,23 +43,38 @@ const TransactionManagement = lazy(
 );
 
 const App = () => {
-  const { user, loading } = useSelector(
-    (state: RootState) => state.userReducer
-  );
+  const storedUser = localStorage.getItem('user');
+  const initialUserState = storedUser ? JSON.parse(storedUser) : null;
+  const [user, setUser] = useState(initialUserState);
+  const [loading, setLoading] = useState(true);
+
+  // const { user, loading } = useSelector(
+  //   (state: RootState) => state.userReducer
+  // );
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const loadUser = async (user: User | null)=>{
-      if (user) {
-        const data = await getUser(user.uid);
-        dispatch(userExist(data.user));
-      } else dispatch(userNotExist());
-
+    setLoading(true);
+    
+    if (user) {
+      const loadUser = async () => {
+        try {
+          const userData = await getUser(user.uid);
+          dispatch(userExist(userData.user));
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          // Handle error (e.g., log out user)
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadUser();
+    } else {
+      setLoading(false);
     }
-    loadUser(user);
-  
   }, [user]);
+
 
   return loading ? (
     <Loader />

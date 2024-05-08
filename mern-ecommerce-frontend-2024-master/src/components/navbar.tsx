@@ -15,7 +15,7 @@ import { MdDashboardCustomize } from "react-icons/md";
 
 import "./Navbar.scss"
 import { useState } from "react";
-import axios from "axios";
+
 
 interface PropsType {
     user: User | null;
@@ -29,11 +29,9 @@ const Navbar = ({ user }: PropsType) => {
 
   const logoutHandler = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/v1/user/logout") 
-      
+      localStorage.removeItem('user');
        console.log("shi")
       const Navigate = useNavigate();
-      console.log("res",res);
       toast.success("Sign Out Successfully");
       setIsOpen(false);
       Navigate("/");

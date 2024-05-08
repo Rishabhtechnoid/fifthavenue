@@ -28,6 +28,7 @@ const Login = () => {
         toast.success(res.data.message);
         console.log(res);
         const data = await getUser(res.data.user._id);
+        localStorage.setItem('user', JSON.stringify(data));
         dispatch(userExist(data?.user!));
       } else {
         const error = res.error as FetchBaseQueryError;
