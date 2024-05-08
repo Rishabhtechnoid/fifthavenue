@@ -1,15 +1,16 @@
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
-import { useDispatch, } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Loader from "./components/loader";
 import ProtectedRoute from "./components/protected-route";
 import { getUser } from "./redux/api/userAPI";
 import { userExist, userNotExist } from "./redux/reducer/userReducer";
+import { RootState } from "./redux/store";
 import Footer from "./components/footer";
 import Navbar from "./components/navbar";
 import ProductDetails from "./components/productDetails";
-
+import { User } from "./types/types";
 
 const Home = lazy(() => import("./pages/home"));
 const Search = lazy(() => import("./pages/search"));
@@ -42,40 +43,23 @@ const TransactionManagement = lazy(
 );
 
 const App = () => {
-  const storedUser = localStorage.getItem('user');
-  const initialUserState = storedUser ? JSON.parse(storedUser) : null;
-  const [user, setUser] = useState(initialUserState);
-  const [loading, setLoading] = useState(true);
-
-  // const { user, loading } = useSelector(
-  //   (state: RootState) => state.userReducer
-  // );
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  );
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setLoading(true);
-    
-    if (user) {
-      const loadUser = async () => {
-        try {
-          const userData = await getUser(user.uid);
-          setUser(userData);
-          dispatch(userExist(userData.user));
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-          dispatch(userNotExist());
-          // Handle error (e.g., log out user)
-        } finally {
-          setLoading(false);
-        }
-      };
-      loadUser();
-    } else {
-      setLoading(false);
-    }
-  }, [user]);
+    const loadUser = async (user: User | null)=>{
+      if (user) {
+        const data = await getUser(user.uid);
+        dispatch(userExist(data.user));
+      } else dispatch(userNotExist());
 
+    }
+    loadUser(user);
+  
+  }, [user]);
 
   return loading ? (
     <Loader />

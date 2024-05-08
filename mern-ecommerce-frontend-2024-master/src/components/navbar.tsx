@@ -27,7 +27,7 @@ const Navbar = ({ user }: PropsType) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const logoutHandler = async () => {
+  const logoutHandler =  () => {
     try {
       localStorage.removeItem('user');
        console.log("shi")
@@ -113,7 +113,7 @@ const Navbar = ({ user }: PropsType) => {
           
       {user?._id ? (
         <>
-          <button onClick={logoutHandler}>
+          <button>
             <FaUser />
           </button>
           <dialog open={isOpen}>

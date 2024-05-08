@@ -7,7 +7,7 @@ import { userExist, userNotExist } from "../redux/reducer/userReducer";
 import { useDispatch } from "react-redux";
 
 import { getUser, useRegisterMutation } from "../redux/api/userAPI";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -30,6 +30,9 @@ const Login = () => {
         const data = await getUser(res.data.user._id);
         localStorage.setItem('user', JSON.stringify(data));
         dispatch(userExist(data?.user!));
+        const Navigate = useNavigate();
+        Navigate("/");
+
       } else {
         const error = res.error as FetchBaseQueryError;
         const message = (error.data as MessageResponse).message;
