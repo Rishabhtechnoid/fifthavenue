@@ -1,16 +1,15 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Loader from "./components/loader";
 import ProtectedRoute from "./components/protected-route";
 import { getUser } from "./redux/api/userAPI";
 import { userExist, userNotExist } from "./redux/reducer/userReducer";
-import { RootState } from "./redux/store";
 import Footer from "./components/footer";
 import Navbar from "./components/navbar";
 import ProductDetails from "./components/productDetails";
-import { User } from "./types/types";
+
 
 const Home = lazy(() => import("./pages/home"));
 const Search = lazy(() => import("./pages/search"));
@@ -61,9 +60,11 @@ const App = () => {
       const loadUser = async () => {
         try {
           const userData = await getUser(user.uid);
+          setUser(userData);
           dispatch(userExist(userData.user));
         } catch (error) {
           console.error('Error fetching user data:', error);
+          dispatch(userNotExist());
           // Handle error (e.g., log out user)
         } finally {
           setLoading(false);
