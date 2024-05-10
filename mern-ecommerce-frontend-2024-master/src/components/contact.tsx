@@ -1,5 +1,5 @@
 
-import "./Contact.scss";import { FaFacebook } from "react-icons/fa";
+import "./contact.scss";import { FaFacebook } from "react-icons/fa";
 import { RiInstagramFill } from "react-icons/ri";
 import { FaTwitter } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
