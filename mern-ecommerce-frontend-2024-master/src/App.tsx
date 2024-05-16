@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
@@ -48,30 +48,40 @@ const App = () => {
   );
 
   const dispatch = useDispatch();
+  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
-    const loadUser = async (user: User | null)=>{
-      if (user) {
-        const data = await getUser(user.uid);
-        dispatch(userExist(data.user));
-      } else dispatch(userNotExist());
-
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      dispatch(userExist(JSON.parse(storedUser)));
+    } else {
+      dispatch(userNotExist());
     }
-    loadUser(user);
-  
-  }, [user]);
+    setInitialLoad(false);
+  }, [dispatch]);
+
+  useEffect(() => {
+    const loadUser = async (user: User | null) => {
+      if (user) {
+        const data = await getUser(user._id);
+        dispatch(userExist(data.user));
+        localStorage.setItem('user', JSON.stringify(data.user));
+      } else {
+        dispatch(userNotExist());
+        localStorage.removeItem('user');
+      }
+    };
+
+    if (!initialLoad && user) {
+      loadUser(user);
+    }
+  }, [user, initialLoad, dispatch]);
 
   return loading ? (
     <Loader />
   ) : (
     <Router>
-      
-      {/* Header */}
-       <Navbar user={user}/>
-      {/* <Header user={user} /> */}
-      {/* <Slider/>  */}
-  
-
+      <Navbar user={user} />
 
       <Suspense fallback={<Loader />}>
         <Routes>
@@ -79,34 +89,29 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/search" element={<Search />} />
           <Route path="/cart" element={<Cart />} />
-          <Route  path="/product/:id" element={<ProductDetails/>} />
-          {/* Not logged In Route */}
+          <Route path="/product/:id" element={<ProductDetails />} />
           <Route
             path="/login"
             element={
-              <ProtectedRoute isAuthenticated={user ? false : true}>
+              <ProtectedRoute isAuthenticated={!user}>
                 <Login />
-             
               </ProtectedRoute>
             }
           />
-          
-          {/* Logged In User Routes */}
           <Route
-            element={<ProtectedRoute isAuthenticated={user ? true : false} />}
+            element={<ProtectedRoute isAuthenticated={!!user} />}
           >
             <Route path="/shipping" element={<Shipping />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/order/:id" element={<OrderDetails />} />
             <Route path="/pay" element={<Checkout />} />
           </Route>
-          {/* Admin Routes */}
           <Route
             element={
               <ProtectedRoute
                 isAuthenticated={true}
                 adminOnly={true}
-                admin={user?.role === "admin" ? true : false}
+                admin={user?.role === "admin"}
               />
             }
           >
@@ -114,32 +119,21 @@ const App = () => {
             <Route path="/admin/product" element={<Products />} />
             <Route path="/admin/customer" element={<Customers />} />
             <Route path="/admin/transaction" element={<Transaction />} />
-            {/* Charts */}
             <Route path="/admin/chart/bar" element={<Barcharts />} />
             <Route path="/admin/chart/pie" element={<Piecharts />} />
             <Route path="/admin/chart/line" element={<Linecharts />} />
-            {/* Apps */}
             <Route path="/admin/app/coupon" element={<Coupon />} />
             <Route path="/admin/app/stopwatch" element={<Stopwatch />} />
             <Route path="/admin/app/toss" element={<Toss />} />
-
-            {/* Management */}
             <Route path="/admin/product/new" element={<NewProduct />} />
-
             <Route path="/admin/product/:id" element={<ProductManagement />} />
-
-            <Route
-              path="/admin/transaction/:id"
-              element={<TransactionManagement />}
-            />
+            <Route path="/admin/transaction/:id" element={<TransactionManagement />} />
           </Route>
-
           <Route path="*" element={<NotFound />} />
-          
         </Routes>
       </Suspense>
       <Toaster position="bottom-center" />
-      <Footer/>
+      <Footer />
     </Router>
   );
 };

@@ -19,7 +19,11 @@ export const userReducer = createSlice({
       state.loading = false;
       state.user = null;
     },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
   },
 });
 
-export const { userExist, userNotExist } = userReducer.actions;
+export const { userExist, userNotExist, setLoading } = userReducer.actions;
+export default userReducer.reducer;
