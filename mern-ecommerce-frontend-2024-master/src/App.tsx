@@ -1,16 +1,14 @@
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy } from "react";
 import { Toaster } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Loader from "./components/loader";
 import ProtectedRoute from "./components/protected-route";
-import { getUser } from "./redux/api/userAPI";
-import { userExist, userNotExist } from "./redux/reducer/userReducer";
 import { RootState } from "./redux/store";
 import Footer from "./components/footer";
 import Navbar from "./components/navbar";
 import ProductDetails from "./components/productDetails";
-import { User } from "./types/types";
+import useFetchUser from "./hooks/useFetchUser"; // Import the custom hook
 
 const Home = lazy(() => import("./pages/home"));
 const Search = lazy(() => import("./pages/search"));
@@ -35,54 +33,21 @@ const Coupon = lazy(() => import("./pages/admin/apps/coupon"));
 const Stopwatch = lazy(() => import("./pages/admin/apps/stopwatch"));
 const Toss = lazy(() => import("./pages/admin/apps/toss"));
 const NewProduct = lazy(() => import("./pages/admin/management/newproduct"));
-const ProductManagement = lazy(
-  () => import("./pages/admin/management/productmanagement")
-);
-const TransactionManagement = lazy(
-  () => import("./pages/admin/management/transactionmanagement")
-);
+const ProductManagement = lazy(() => import("./pages/admin/management/productmanagement"));
+const TransactionManagement = lazy(() => import("./pages/admin/management/transactionmanagement"));
 
 const App = () => {
-  const { user, loading } = useSelector(
-    (state: RootState) => state.userReducer
-  );
+  const { user, loading } = useSelector((state: RootState) => state.userReducer);
 
-  const dispatch = useDispatch();
-  const [initialLoad, setInitialLoad] = useState(true);
+  useFetchUser(); // Call the custom hook
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      dispatch(userExist(JSON.parse(storedUser)));
-    } else {
-      dispatch(userNotExist());
-    }
-    setInitialLoad(false);
-  }, [dispatch]);
+  if (loading) {
+    return <Loader />;
+  }
 
-  useEffect(() => {
-    const loadUser = async (user: User | null) => {
-      if (user) {
-        const data = await getUser(user._id);
-        dispatch(userExist(data.user));
-        localStorage.setItem('user', JSON.stringify(data.user));
-      } else {
-        dispatch(userNotExist());
-        localStorage.removeItem('user');
-      }
-    };
-
-    if (!initialLoad && user) {
-      loadUser(user);
-    }
-  }, [user, initialLoad, dispatch]);
-
-  return loading ? (
-    <Loader />
-  ) : (
+  return (
     <Router>
       <Navbar user={user} />
-
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -90,31 +55,18 @@ const App = () => {
           <Route path="/search" element={<Search />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/product/:id" element={<ProductDetails />} />
-          <Route
-            path="/login"
-            element={
-              <ProtectedRoute isAuthenticated={!user}>
-                <Login />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            element={<ProtectedRoute isAuthenticated={!!user} />}
-          >
+          <Route path="/login" element={
+            <ProtectedRoute isAuthenticated={!user}>
+              <Login />
+            </ProtectedRoute>
+          } />
+          <Route element={<ProtectedRoute isAuthenticated={!!user} />}>
             <Route path="/shipping" element={<Shipping />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/order/:id" element={<OrderDetails />} />
             <Route path="/pay" element={<Checkout />} />
           </Route>
-          <Route
-            element={
-              <ProtectedRoute
-                isAuthenticated={true}
-                adminOnly={true}
-                admin={user?.role === "admin"}
-              />
-            }
-          >
+          <Route element={<ProtectedRoute isAuthenticated={!!user} adminOnly={true} admin={user?.role === "admin"} />}>
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/product" element={<Products />} />
             <Route path="/admin/customer" element={<Customers />} />

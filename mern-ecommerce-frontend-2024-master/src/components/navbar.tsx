@@ -1,164 +1,136 @@
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  FaSearch,
-  FaShoppingBag,
-  FaSignInAlt,
-  FaUser,
-
-} from "react-icons/fa";
+import { FaSearch, FaShoppingBag, FaSignInAlt, FaBars, FaTimes } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { User } from "../types/types";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdDashboardCustomize } from "react-icons/md";
 import { userNotExist } from "../redux/reducer/userReducer";
-import "./Navbar.scss"
+import "./Navbar.scss";
 import { useState } from "react";
-
 
 interface PropsType {
   user: User | null;
 }
 
 const Navbar = ({ user }: PropsType) => {
-
-
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Correctly call useNavigate at the top level of the component
+  const navigate = useNavigate();
 
   const logoutHandler = () => {
     try {
-      localStorage.removeItem('user');
+      localStorage.removeItem("user");
       console.log("User logged out");
-      dispatch(userNotExist()); // Dispatch the action to update Redux state
+      dispatch(userNotExist());
       toast.success("Sign Out Successfully");
-      setIsOpen(false); // Assuming setIsOpen is defined in your component
-      navigate("/"); // Use navigate function here
+      setMenuOpen(false);
+      navigate("/");
     } catch (error) {
       toast.error("Sign Out Failed");
     }
   };
-  //   const products = useSelector((state) => state.cart.products);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   return (
     <div className="navbar">
       <div className="wrapper">
         <div className="left">
-          <div className="item">
-            <img src="/img/en.png" alt="" />
-            <MdKeyboardArrowDown />
-          </div>
-          <div className="item">
-            <span>USD</span>
-            <MdKeyboardArrowDown />
-          </div>
-          <div className="item">
-
-            <Link
-              className="link" to="/search">Women</Link>
-          </div>
-          <div className="item">
-            <Link className="link" to="/search">Men</Link>
-          </div>
-          <div className="item">
-            <Link className="link" to="/products/3">Children</Link>
-          </div>
-        </div>
-        <div className="center">
           <Link className="link" to="/">LUXURY RAPHELS</Link>
         </div>
-
         <div className="right">
-          <div className="item">
-            <Link onClick={() => setIsOpen(false)} to={"/"}>
-              HOME
-            </Link>
-          </div>
-          {user?._id ? (
-            <>
-              <div className="item">
-                <Link onClick={() => setIsOpen(false)} to="/admin/dashboard">
-                  <MdDashboardCustomize />
-                </Link>
-              </div>
-            </>
-          ) : (
-            <Link to={"/login"}>
-
-            </Link>
-          )}
-          <div className="item">
-            <Link className="link" to="/orders">My Orders</Link>
-          </div>
-
-          <div className="icons">
-            <Link onClick={() => setIsOpen(false)} to={"/search"}>
-              <FaSearch />
-            </Link>
-
-
-
-
-            <div className="cartIcon">
-
-              <Link onClick={() => setIsOpen(false)} to={"/cart"}>
-                <FaShoppingBag />
-              </Link>
-
-
-              <span>{1}</span>
+          <div className="items">
+            <div className="item">
+              <Link to="/">HOME</Link>
             </div>
-
-
-          </div>
-
-          {user?._id ? (
-            <div>
-              <button onClick={() => logoutHandler()}>
-                Logout
-              </button>
-            </div>
-          ) : null}
-
-          {user?._id ? (
-            <>
-              <button>
-                <FaUser />
-              </button>
-              <dialog open={isOpen}>
-                <div>
-                  {user.role === "admin" && (
-                    <Link onClick={() => setIsOpen(false)} to="/admin/dashboard">
-                      Admin
-                    </Link>
-                  )}
-
-                  <Link onClick={() => setIsOpen(false)} to="/orders">
-                    Orders
+            {user?._id ? (
+              <>
+                <div className="item">
+                  <Link to="/admin/dashboard">
+                    <MdDashboardCustomize />
                   </Link>
-                  <button onClick={logoutHandler}>
-                    Logout
-                  </button>
                 </div>
-              </dialog>
-            </>
-          ) : (
-            <Link to={"/login"}>
-              <FaSignInAlt />
-            </Link>
-          )}
-
+                <div className="item">
+                  <Link className="link" to="/orders">My Orders</Link>
+                </div>
+                <div className="item">
+                  <button onClick={logoutHandler}>Logout</button>
+                </div>
+              </>
+            ) : (
+              <Link to="/login">
+                <FaSignInAlt />
+              </Link>
+            )}
+            <div className="icons">
+              <Link to="/search">
+                <FaSearch />
+              </Link>
+              <div className="cartIcon">
+                <Link to="/cart">
+                  <FaShoppingBag />
+                </Link>
+                <span>{1}</span>
+              </div>
+            </div>
+          </div>
+          <div className="hamburger" onClick={toggleMenu}>
+            {menuOpen ? <FaTimes /> : <FaBars />}
+          </div>
         </div>
       </div>
-
-
+      {menuOpen && (
+        <div className="mobileMenu">
+          <div className="item">
+            <Link onClick={toggleMenu} to="/">HOME</Link>
+          </div>
+          <div className="item">
+            <Link onClick={toggleMenu} to="/search">
+              <FaSearch /> Search
+            </Link>
+          </div>
+          <div className="item">
+            <Link onClick={toggleMenu} to="/cart">
+              <FaShoppingBag /> Cart
+            </Link>
+          </div>
+          <div className="item">
+            <Link onClick={toggleMenu} to="/search">Women</Link>
+          </div>
+          <div className="item">
+            <Link onClick={toggleMenu} to="/search">Men</Link>
+          </div>
+          <div className="item">
+            <Link onClick={toggleMenu} to="/products/3">Children</Link>
+          </div>
+          {user?._id && (
+            <>
+              <div className="item">
+                <Link onClick={toggleMenu} to="/admin/dashboard">
+                  <MdDashboardCustomize /> Admin
+                </Link>
+              </div>
+              <div className="item">
+                <Link onClick={toggleMenu} to="/orders">My Orders</Link>
+              </div>
+              <div className="item">
+                <button onClick={() => { logoutHandler(); toggleMenu(); }}>Logout</button>
+              </div>
+            </>
+          )}
+          {!user?._id && (
+            <div className="item">
+              <Link onClick={toggleMenu} to="/login">
+                <FaSignInAlt /> Login
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
 export default Navbar;
-
-
-
