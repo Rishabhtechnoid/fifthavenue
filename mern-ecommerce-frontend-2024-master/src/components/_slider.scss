@@ -1,40 +1,84 @@
-.slider{
-  height: calc(100vh);
-  width:90vw;
+.slider {
+  height: 90vh;
+  width: 90vw;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Ensure no horizontal scroll */
 
-  .container{
-    width: 300vw;
-    height: 100%;
+  .container {
     display: flex;
-    transition: all 1s ease;
+    transition: transform 1s ease;
+    height: 100%;
+    width: 300%; /* Width for 3 slides (100% * number of slides) */
 
-    img{
-      width: 450px;
+    img {
+      width: 100vw; /* Each image takes full viewport width */
       height: 100%;
-      object-fit: cover
+      object-fit: cover; /* Ensure the image covers the area without distortion */
     }
   }
 
-  .icons{
-    width: fit-content;
-    display: flex;
+  .icons {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 100px;
-    gap: 10px;
-    margin: auto;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
 
-    .icon{
+    .icon {
       width: 50px;
       height: 50px;
-      border: 1px solid #999;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      font-size: 24px;
+      user-select: none;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 1);
+      }
+    }
+  }
+}
+
+// Additional styles for responsive design
+@media (max-width: 1024px) {
+  .slider {
+    height: 80vh; /* Adjust height for tablets */
+  }
+
+  .container img {
+    object-fit: contain; /* Ensure the entire image is visible within the viewport */
+  }
+}
+
+@media (max-width: 768px) {
+  .slider {
+    height: 70vh; /* Adjust height for smaller tablets */
+  }
+
+  .container img {
+    object-fit: contain; /* Ensure the entire image is visible within the viewport */
+  }
+}
+
+@media (max-width: 480px) {
+  .slider {
+    height: 60vh; /* Adjust height for mobile devices */
+    width: 100%; /* Ensure the slider takes full width */
+  }
+
+  .container {
+    width: 300%; /* Ensure container width fits all slides */
+
+    img {
+      width: 100%; /* Each image takes full container width */
+      height: 100%;
+      object-fit: contain; /* Ensure the entire image is visible within the viewport */
     }
   }
 }

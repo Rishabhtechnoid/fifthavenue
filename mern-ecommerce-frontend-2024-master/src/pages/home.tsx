@@ -8,7 +8,7 @@ import { addToCart } from "../redux/reducer/cartReducer";
 import { CartItem } from "../types/types";
 import Slider from "../components/slider";
 import Categories from "../components/categories";
-
+import bannerImage from '../assets/images/banner_women.png';
 
 const Home = () => {
   const { data, isLoading, isError } = useLatestProductsQuery("");
@@ -25,10 +25,10 @@ const Home = () => {
 
   return (
     <div className="home">
-   
-  
+
+
       <section>
-     
+        <img src={bannerImage} alt="Banner Women" />
       </section>
 
 
@@ -40,11 +40,11 @@ const Home = () => {
         </Link>
       </h1>
 
-    
+
 
       <main>
-     
-      
+
+
         {isLoading ? (
           <Skeleton width="80vw" />
         ) : (
@@ -59,24 +59,24 @@ const Home = () => {
               photo={i.photo}
             />
 
-            
 
-           
+
+
           ))
         )}
       </main>
 
-     <div>
-      <Slider/>
-     </div>
+      <div>
+        <Slider />
+      </div>
       <div className="slider">
-      <h1 className="Cate">
-        Shop By Categories
-       
-      </h1>
-      <Categories/>
-   </div>
-  
+        <h1 className="Cate">
+          Shop By Categories
+
+        </h1>
+        <Categories />
+      </div>
+
 
     </div>
   );

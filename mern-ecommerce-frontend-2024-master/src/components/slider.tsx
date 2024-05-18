@@ -1,5 +1,4 @@
-import  { useState } from "react";
-
+import { useState } from "react";
 import "./_slider.scss";
 
 const Slider = () => {
@@ -9,29 +8,29 @@ const Slider = () => {
     "https://images.pexels.com/photos/1549200/pexels-photo-1549200.jpeg?auto=compress&cs=tinysrgb&w=1600",
     "https://images.pexels.com/photos/949670/pexels-photo-949670.jpeg?auto=compress&cs=tinysrgb&w=1600",
     "https://images.pexels.com/photos/837140/pexels-photo-837140.jpeg?auto=compress&cs=tinysrgb&w=1600",
-   
   ];
 
   const prevSlide = () => {
-    setCurrentSlide(currentSlide === 0 ? 1 : (prev) => prev - 1);
+    setCurrentSlide((prev) => (prev === 0 ? data.length - 1 : prev - 1));
   };
+
   const nextSlide = () => {
-    setCurrentSlide(currentSlide === 2 ? 0 : (prev) => prev + 3);
+    setCurrentSlide((prev) => (prev === data.length - 1 ? 0 : prev + 1));
   };
 
   return (
     <div className="slider">
-      <div className="container" style={{transform:`translateX(-${currentSlide * 100}vw)`}}>
-        <img src={data[0]} alt="" />
-        <img src={data[1]} alt="" />
-        <img src={data[2]} alt="" />
+      <div className="container" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+        {data.map((image, index) => (
+          <img src={image} alt={`Slide ${index}`} key={index} />
+        ))}
       </div>
-      <div className="">
+      <div className="icons">
         <div className="icon" onClick={prevSlide}>
-       
+          &#9664; {/* Left arrow */}
         </div>
         <div className="icon" onClick={nextSlide}>
-      
+          &#9654; {/* Right arrow */}
         </div>
       </div>
     </div>
