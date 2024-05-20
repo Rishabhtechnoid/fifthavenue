@@ -1,84 +1,41 @@
-.slider {
-  height: 90vh;
-  width: 90vw;
-  position: relative;
-  overflow: hidden; /* Ensure no horizontal scroll */
+.carousel-container {
+  width: 100%;
 
-  .container {
-    display: flex;
-    transition: transform 1s ease;
-    height: 100%;
-    width: 300%; /* Width for 3 slides (100% * number of slides) */
-
+  .slick-slide {
     img {
-      width: 100vw; /* Each image takes full viewport width */
-      height: 100%;
-      object-fit: cover; /* Ensure the image covers the area without distortion */
+      width: 100%;
+      height: auto;
     }
   }
 
-  .icons {
-    position: absolute;
-    left: 50%;
-    bottom: 20px;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
-
-    .icon {
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      background-color: rgba(255, 255, 255, 0.8);
-      border-radius: 50%;
-      font-size: 24px;
-      user-select: none;
-      transition: background-color 0.3s;
-
-      &:hover {
-        background-color: rgba(255, 255, 255, 1);
+  @media (max-width: 1024px) {
+    .slick-slide {
+      img {
+        height: auto;
+        object-fit: contain;
       }
     }
   }
-}
 
-// Additional styles for responsive design
-@media (max-width: 1024px) {
-  .slider {
-    height: 80vh; /* Adjust height for tablets */
+  @media (max-width: 768px) {
+    height: 100vh;
+
+    .slick-slide {
+      img {
+        height: auto;
+        object-fit: contain;
+      }
+    }
   }
 
-  .container img {
-    object-fit: contain; /* Ensure the entire image is visible within the viewport */
-  }
-}
+  @media (max-width: 480px) {
+    height: 26vh;
 
-@media (max-width: 768px) {
-  .slider {
-    height: 70vh; /* Adjust height for smaller tablets */
-  }
-
-  .container img {
-    object-fit: contain; /* Ensure the entire image is visible within the viewport */
-  }
-}
-
-@media (max-width: 480px) {
-  .slider {
-    height: 60vh; /* Adjust height for mobile devices */
-    width: 100%; /* Ensure the slider takes full width */
-  }
-
-  .container {
-    width: 300%; /* Ensure container width fits all slides */
-
-    img {
-      width: 100%; /* Each image takes full container width */
-      height: 100%;
-      object-fit: contain; /* Ensure the entire image is visible within the viewport */
+    .slick-slide {
+      img {
+        height: auto;
+        object-fit: contain;
+      }
     }
   }
 }

@@ -1,40 +1,37 @@
-import { useState } from "react";
+import React from 'react';
+import Slider from 'react-slick'
 import "./_slider.scss";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-const Slider = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+const images = [
+  "https://images.pexels.com/photos/1549200/pexels-photo-1549200.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  "https://images.pexels.com/photos/949670/pexels-photo-949670.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  "https://images.pexels.com/photos/837140/pexels-photo-837140.jpeg?auto=compress&cs=tinysrgb&w=1600",
+];
 
-  const data = [
-    "https://images.pexels.com/photos/1549200/pexels-photo-1549200.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    "https://images.pexels.com/photos/949670/pexels-photo-949670.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    "https://images.pexels.com/photos/837140/pexels-photo-837140.jpeg?auto=compress&cs=tinysrgb&w=1600",
-  ];
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? data.length - 1 : prev - 1));
-  };
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev === data.length - 1 ? 0 : prev + 1));
+const Carousel: React.FC = () => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
   };
 
   return (
-    <div className="slider">
-      <div className="container" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-        {data.map((image, index) => (
-          <img src={image} alt={`Slide ${index}`} key={index} />
+    <div className="carousel-container">
+      <Slider {...settings}>
+        {images.map((img, index) => (
+          <div key={index}>
+            <img src={img} alt={`Slide ${index + 1}`} />
+          </div>
         ))}
-      </div>
-      <div className="icons">
-        <div className="icon" onClick={prevSlide}>
-          &#9664; {/* Left arrow */}
-        </div>
-        <div className="icon" onClick={nextSlide}>
-          &#9654; {/* Right arrow */}
-        </div>
-      </div>
+      </Slider>
     </div>
   );
 };
 
-export default Slider;
+export default Carousel;

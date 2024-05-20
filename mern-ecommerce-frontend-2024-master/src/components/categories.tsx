@@ -11,7 +11,7 @@ export const Categories = () => {
             alt=""
           />
           <button>
-       
+
             <Link className="link" to="/search">
               Sale
             </Link>

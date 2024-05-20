@@ -69,13 +69,13 @@ const Home = () => {
       <div>
         <Slider />
       </div>
-      <div className="slider">
-        <h1 className="Cate">
-          Shop By Categories
+      {/* <div className="slider"> */}
+      <h1 className="Cate">
+        Shop By Categories
 
-        </h1>
-        <Categories />
-      </div>
+      </h1>
+      <Categories />
+      {/* </div> */}
 
 
     </div>

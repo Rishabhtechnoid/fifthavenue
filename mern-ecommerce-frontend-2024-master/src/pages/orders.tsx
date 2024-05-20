@@ -71,8 +71,8 @@ const Orders = () => {
                 i.status === "Processing"
                   ? "red"
                   : i.status === "Shipped"
-                  ? "green"
-                  : "purple"
+                    ? "green"
+                    : "purple"
               }
             >
               {i.status}
@@ -92,7 +92,6 @@ const Orders = () => {
   )();
   return (
     <div className="container">
-      <h1>My Orders</h1>
       {isLoading ? <Skeleton length={20} /> : Table}
     </div>
   );

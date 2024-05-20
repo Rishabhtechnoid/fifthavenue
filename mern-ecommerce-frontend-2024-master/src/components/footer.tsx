@@ -4,9 +4,9 @@ import Contact from './contact'
 const Footer = () => {
   return (
 
-   
+
     <div className="footer">
-         <Contact/>
+      <Contact />
       <div className="top">
         <div className="item">
           <h1>Categories</h1>
@@ -45,7 +45,7 @@ const Footer = () => {
       </div>
       <div className="bottom">
         <div className="left">
-          <span className="logo">LUXURY RAPHELS</span>
+          <span className="logo">FIFTHAVENUEHUB</span>
           <span className="copyright">
             © Copyright 2023. All Rights Reserved
           </span>
