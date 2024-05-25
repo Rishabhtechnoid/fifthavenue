@@ -16,6 +16,7 @@ interface DataType {
   name: string;
   price: number;
   stock: number;
+  sizes: string[];
   action: ReactElement;
 }
 
@@ -35,6 +36,10 @@ const columns: Column<DataType>[] = [
   {
     Header: "Stock",
     accessor: "stock",
+  },
+  {
+    Header: "Sizes",
+    accessor: "sizes",
   },
   {
     Header: "Action",
@@ -62,6 +67,7 @@ const Products = () => {
           name: i.name,
           price: i.price,
           stock: i.stock,
+          sizes: i.sizes,
           action: <Link to={`/admin/product/${i._id}`}>Manage</Link>,
         }))
       );

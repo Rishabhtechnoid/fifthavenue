@@ -21,6 +21,7 @@ export type Product = {
   stock: number;
   category: string;
   photo: string;
+  sizes: string[];
   _id: string;
   description :string;
 };

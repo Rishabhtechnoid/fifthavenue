@@ -18,6 +18,10 @@ const schema = new mongoose.Schema(
       type: Number,
       required: [true, "Please enter Stock"],
     },
+    sizes: {
+      type: [String],
+      required: [true, "Please enter sizes"]
+    },
     category: {
       type: String,
       required: [true, "Please enter Category"],

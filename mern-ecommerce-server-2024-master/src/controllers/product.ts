@@ -83,7 +83,7 @@ export const getSingleProduct = TryCatch(async (req, res, next) => {
 
 export const newProduct = TryCatch(
   async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
-    const { name, price, stock, category , description } = req.body;
+    const { name, price, stock, category ,sizes, description } = req.body;
     const photo = req.file;
 
     if (!photo) return next(new ErrorHandler("Please add Photo", 400));
@@ -102,6 +102,7 @@ export const newProduct = TryCatch(
       stock,
       category: category.toLowerCase(),
       photo: photo.path,
+      sizes,
       description
     });
 
