@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
 import { server } from "../redux/store";
-import { CartItem } from "../types/types";
+import type { CartItem } from "../types/types";
 
 type CartItemProps = {
   cartItem: CartItem;
@@ -16,7 +16,7 @@ const CartItem = ({
   decrementHandler,
   removeHandler,
 }: CartItemProps) => {
-  const { photo, productId, name, price, quantity } = cartItem;
+  const { photo, productId, name, price, quantity, size } = cartItem;
 
   return (
     <div className="cart-item">
@@ -25,6 +25,8 @@ const CartItem = ({
         <Link to={`/product/${productId}`}>{name}</Link>
         <span>₹{price}</span>
       </article>
+
+      <span style={{ fontWeight: "bold" }}>{size}</span>
 
       <div>
         <button onClick={() => decrementHandler(cartItem)}>-</button>

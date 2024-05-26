@@ -10,6 +10,7 @@ export const createPaymentIntent = TryCatch(async (req, res, next) => {
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount:Math.round(amount * 100),
+    description: "Default description for payment",
     currency: "usd",
   });
 

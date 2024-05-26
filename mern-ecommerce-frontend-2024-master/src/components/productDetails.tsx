@@ -5,11 +5,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { server } from "../redux/store";
 import { BiArrowBack } from "react-icons/bi";
 import { useProductDetailsQuery, } from "../redux/api/productAPI";
-
+import { CartItem } from "../types/types";
+import toast from "react-hot-toast";
 import DescriptionBox from './descriptionBox'
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/reducer/cartReducer";
 
 
 const ProductDetails = () => {
+  const dispatch = useDispatch();
 
   const params = useParams();
 
@@ -17,11 +21,12 @@ const ProductDetails = () => {
 
   console.log("dara", data);
   const [quantity, setQuantity] = useState(1);
+  const sizes = data?.product?.sizes || [];
+
+  const [size, setSize] = useState("");
 
 
   useEffect(() => {
-
-
 
   }, [params.id]);
 
@@ -35,15 +40,35 @@ const ProductDetails = () => {
     setQuantity(quantity - 1);
   };
 
-  const addToCartHandler = () => {
-    // Implement add to cart logic
+  const addToCartHandler = (cartItem: CartItem) => {
+    if (cartItem.stock < 1) return toast.error("Out of Stock");
+    dispatch(addToCart(cartItem));
+    toast.success("Added to cart");
+  };
+
+  const handleButtonClick = () => {
+    if (data?.product) {
+      const cartItem: CartItem = {
+        productId: data.product._id,
+        photo: data.product.photo,
+        name: data.product.name,
+        price: data.product.price,
+        size: size,
+        quantity: quantity,
+        stock: data.product.stock,
+      };
+      addToCartHandler(cartItem);
+    }
+  };
+
+  const handleSizeClick = (size: string) => {
+    setSize(size);
   };
 
   const navigate = useNavigate();
   console.log('====================================');
   console.log("data", data);
   console.log('====================================');
-  const sizes = data?.product?.sizes || [];
   return (
     <Fragment>
       {isLoading ? (
@@ -97,23 +122,43 @@ const ProductDetails = () => {
                   <div className="product-sizes">
                     <h1>Select Size</h1>
                     <div className='sizes'>
-                      {sizes.map((size, index) => (
-                        <div key={index}>{size}</div>
+                      {sizes.map((s, index) => (
+                        <div
+                          key={`${s}-${index}`}
+                          onClick={() => handleSizeClick(s)}
+                          style={{
+                            cursor: 'pointer',
+                            padding: '10px',
+                            border: size === s ? '2px solid blue' : '1px solid gray'
+                          }}
+                        >
+                          {s}
+                        </div>
                       ))}
                     </div>
                   </div>
                 ) : (
                   <div></div>
                 )}
+                {/* {size && (
+                  <div>
+                    <h2>Selected Size: {size}</h2>
+                  </div>
+                )} */}
                 <div className="detailsBlock-3-1">
                   <div className="detailsBlock-3-1-1">
                     <button onClick={decreaseQuantity}>-</button>
                     <span>{quantity}</span>
                     <button onClick={increaseQuantity}>+</button>
                   </div>
-                  {data?.product && <button disabled={data?.product?.stock < 1} onClick={addToCartHandler}>
-                    Add to Cart
-                  </button>}:{ }
+                  {data?.product && (
+                    <button
+                      disabled={data.product.stock < 1}
+                      onClick={handleButtonClick}
+                    >
+                      Add to Cart
+                    </button>
+                  )}
                 </div>
                 <p>
                   Status:{' '}

@@ -80,7 +80,7 @@
   }
 
   > article {
-    height: 85vh;
+    height: 107vh;
     padding: 2rem;
     width: 100%;
     max-width: 400px;
@@ -112,17 +112,13 @@
         }
 
         > input {
-          @include inputStyle(
-            100%,
-            1rem,
-            unset,
-            1px solid rgba(13, 13, 13, 0.196)
-          );
+          @include inputStyle(100%, 1rem, unset, 1px solid rgba(13, 13, 13, 0.196));
           border-radius: 5px;
         }
       }
 
       > button {
+        margin-top: 40px;
         padding: 1rem;
         border: none;
         background-color: rgb(5, 107, 224);

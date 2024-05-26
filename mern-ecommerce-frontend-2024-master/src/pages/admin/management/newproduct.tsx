@@ -95,16 +95,7 @@ const NewProduct = () => {
               />
             </div>
 
-            <div>
-              <label>Sizes</label>
-              <input
-                required
-                type="text"
-                placeholder="Sizes"
-                value={sizes}
-                onChange={(e) => setSizes([e.target.value])}
-              />
-            </div>
+
 
             <div>
               <label>Category</label>
@@ -114,6 +105,16 @@ const NewProduct = () => {
                 placeholder="eg. laptop, camera etc"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
+              />
+            </div>
+            <div>
+              <label>Sizes</label>
+              <input
+                required
+                type="text"
+                placeholder="Sizes"
+                value={sizes}
+                onChange={(e) => setSizes([e.target.value])}
               />
             </div>
 
