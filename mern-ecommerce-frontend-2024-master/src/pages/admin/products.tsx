@@ -16,7 +16,7 @@ interface DataType {
   name: string;
   price: number;
   stock: number;
-  sizes: string[];
+  sizes: string;
   action: ReactElement;
 }
 
@@ -47,6 +47,31 @@ const columns: Column<DataType>[] = [
   },
 ];
 
+// Size order for alphanumeric sizes
+const sizeOrder: { [key: string]: number } = {
+  'XS': 1,
+  'S': 2,
+  'M': 3,
+  'L': 4,
+  'XL': 5,
+  'XXL': 6
+};
+
+// Sorting function
+const sortSizes = (sizes: string[]): string[] => {
+  return sizes.sort((a, b) => {
+    if (sizeOrder[a] && sizeOrder[b]) {
+      return sizeOrder[a] - sizeOrder[b];
+    } else if (sizeOrder[a]) {
+      return -1;
+    } else if (sizeOrder[b]) {
+      return 1;
+    } else {
+      return parseInt(a) - parseInt(b);
+    }
+  });
+};
+
 const Products = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
 
@@ -60,17 +85,18 @@ const Products = () => {
   }
 
   useEffect(() => {
-    if (data)
+    if (data) {
       setRows(
         data.products.map((i) => ({
-          photo: <img src={`${server}/${i.photo}`} />,
+          photo: <img src={`${server}/${i.photo}`} alt={i.name} />,
           name: i.name,
           price: i.price,
           stock: i.stock,
-          sizes: i.sizes,
+          sizes: Array.isArray(i.sizes) ? sortSizes([...i.sizes]).join(", ") : i.sizes,
           action: <Link to={`/admin/product/${i._id}`}>Manage</Link>,
         }))
       );
+    }
   }, [data]);
 
   const Table = TableHOC<DataType>(

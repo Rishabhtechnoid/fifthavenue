@@ -117,7 +117,7 @@ export const newProduct = TryCatch(
 
 export const updateProduct = TryCatch(async (req, res, next) => {
   const { id } = req.params;
-  const { name, price, stock, category , description } = req.body;
+  const { name, price, stock, category, description, sizes } = req.body;
   const photo = req.file;
   const product = await Product.findById(id);
 
@@ -134,7 +134,15 @@ export const updateProduct = TryCatch(async (req, res, next) => {
   if (price) product.price = price;
   if (stock) product.stock = stock;
   if (category) product.category = category;
- 
+  if (description) product.description = description;
+
+  if (sizes) {
+    try {
+      product.sizes = JSON.parse(sizes);
+    } catch (error) {
+      return next(new ErrorHandler("Invalid sizes format", 400));
+    }
+  }
 
   await product.save();
 
@@ -149,6 +157,8 @@ export const updateProduct = TryCatch(async (req, res, next) => {
     message: "Product Updated Successfully",
   });
 });
+
+
 
 export const deleteProduct = TryCatch(async (req, res, next) => {
   const product = await Product.findById(req.params.id);

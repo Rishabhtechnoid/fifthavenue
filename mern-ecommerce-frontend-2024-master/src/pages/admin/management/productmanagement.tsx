@@ -20,18 +20,20 @@ const Productmanagement = () => {
 
   const { data, isLoading, isError } = useProductDetailsQuery(params.id!);
 
-  const { price, photo, name, stock, category } = data?.product || {
+  const { price, photo, name, stock, category, sizes } = data?.product || {
     photo: "",
     category: "",
     name: "",
     stock: 0,
     price: 0,
+    sizes: [],
   };
 
   const [priceUpdate, setPriceUpdate] = useState<number>(price);
   const [stockUpdate, setStockUpdate] = useState<number>(stock);
   const [nameUpdate, setNameUpdate] = useState<string>(name);
   const [categoryUpdate, setCategoryUpdate] = useState<string>(category);
+  const [sizesUpdate, setSizesUpdate] = useState<string[]>(sizes);
   const [photoUpdate, setPhotoUpdate] = useState<string>("");
   const [photoFile, setPhotoFile] = useState<File>();
 
@@ -54,6 +56,21 @@ const Productmanagement = () => {
     }
   };
 
+  const handleSizesChange = (index: number, value: string) => {
+    const updatedSizes = [...sizesUpdate];
+    updatedSizes[index] = value;
+    setSizesUpdate(updatedSizes);
+  };
+
+  const addSizeField = () => {
+    setSizesUpdate([...sizesUpdate, ""]);
+  };
+
+  const removeSizeField = (index: number) => {
+    const updatedSizes = sizesUpdate.filter((_, i) => i !== index);
+    setSizesUpdate(updatedSizes);
+  };
+
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -65,6 +82,7 @@ const Productmanagement = () => {
       formData.set("stock", stockUpdate.toString());
     if (photoFile) formData.set("photo", photoFile);
     if (categoryUpdate) formData.set("category", categoryUpdate);
+    formData.set("sizes", JSON.stringify(sizesUpdate));
 
     const res = await updateProduct({
       formData,
@@ -90,6 +108,7 @@ const Productmanagement = () => {
       setPriceUpdate(data.product.price);
       setStockUpdate(data.product.stock);
       setCategoryUpdate(data.product.category);
+      setSizesUpdate(data.product.sizes);
     }
   }, [data]);
 
@@ -156,6 +175,31 @@ const Productmanagement = () => {
                     value={categoryUpdate}
                     onChange={(e) => setCategoryUpdate(e.target.value)}
                   />
+                </div>
+
+                <div>
+                  <label>Sizes</label>
+                  {sizesUpdate.map((size, index) => (
+                    <div key={index}>
+                      <input
+                        type="text"
+                        placeholder="Size"
+                        value={size}
+                        onChange={(e) =>
+                          handleSizesChange(index, e.target.value)
+                        }
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeSizeField(index)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={addSizeField}>
+                    Add Size
+                  </button>
                 </div>
 
                 <div>
