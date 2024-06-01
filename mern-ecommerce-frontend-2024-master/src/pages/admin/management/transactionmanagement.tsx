@@ -94,6 +94,7 @@ const TransactionManagement = () => {
                   photo={`${server}/${i.photo}`}
                   productId={i.productId}
                   _id={i._id}
+                  size={i.size}
                   quantity={i.quantity}
                   price={i.price}
                 />
@@ -126,8 +127,8 @@ const TransactionManagement = () => {
                     status === "Delivered"
                       ? "purple"
                       : status === "Shipped"
-                      ? "green"
-                      : "red"
+                        ? "green"
+                        : "red"
                   }
                 >
                   {status}
