@@ -32,15 +32,6 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-const corsOptions = {
-  origin: process.env.ORIGIN, // Replace with your frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
-};
-
-app.use(cors(corsOptions));
-
 app.get("/", (req, res) => {
   res.send("API Working with /api/v1");
 });
