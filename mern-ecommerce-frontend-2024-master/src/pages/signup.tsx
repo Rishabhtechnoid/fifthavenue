@@ -96,7 +96,7 @@ const signUp = () => {
         </div>
         <div>
           <button onClick={loginHandler}>
-            <span>Login</span>
+            <span>Sign up</span>
           </button>
         </div>
       </main>
