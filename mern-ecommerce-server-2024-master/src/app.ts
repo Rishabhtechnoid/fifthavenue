@@ -18,7 +18,7 @@ config({
   path: "./.env",
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 const mongoURI = process.env.MONGO_URI || "";
 const stripeKey = process.env.STRIPE_KEY || "";
 
@@ -31,7 +31,7 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan("dev"));
-
+app.use(cors());
 app.get("/", (req, res) => {
   res.send("API Working with /api/v1");
 });
