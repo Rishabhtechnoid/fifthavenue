@@ -49,17 +49,17 @@ const AdminSidebar = () => {
         style={
           phoneActive
             ? {
-                width: "20rem",
-                height: "100vh",
-                position: "fixed",
-                top: 0,
-                left: showModal ? "0" : "-20rem",
-                transition: "all 0.5s",
-              }
+              width: "20rem",
+              height: "100vh",
+              position: "fixed",
+              top: 0,
+              left: showModal ? "0" : "-20rem",
+              transition: "all 0.5s",
+            }
             : {}
         }
       >
-        <h2>Logo.</h2>
+        <h2>FIFTHAVENUEHUB</h2>
         <DivOne location={location} />
         <DivTwo location={location} />
         <DivThree location={location} />
