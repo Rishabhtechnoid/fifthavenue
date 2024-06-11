@@ -117,10 +117,10 @@ const ProductDetails = () => {
                 </div>
               </div>
               <div className="detailsBlock-3">
-                <h1>{`₹${data?.product.price}`}</h1>
+                <h1>{`$${data?.product.price}`}</h1>
                 <div className="description">{data?.product?.description}</div>
 
-                {sortedSizes.length > 0 ? (
+                {sortedSizes.length - 1 > 0 ? (
                   <div className="product-sizes">
                     <h1>Select Size</h1>
                     <div className='sizes'>

@@ -28,7 +28,7 @@ const ProductCard = ({
 
         <img src={`${server}/${photo}`} alt={name} />
         <p>{name}</p>
-        <span>₹{price}</span>
+        <span>${price}</span>
 
         <div>
           <button

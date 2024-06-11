@@ -14,7 +14,7 @@ const NewProduct = () => {
   const [category, setCategory] = useState<string>("");
   const [price, setPrice] = useState<number>(1000);
   const [stock, setStock] = useState<number>(1);
-  const [sizes, setSizes] = useState<string[]>([]);
+  const [sizes, setSizes] = useState<string[]>([""]);
   const [photoPrev, setPhotoPrev] = useState<string>("");
   const [photo, setPhoto] = useState<File>();
 
@@ -37,6 +37,21 @@ const NewProduct = () => {
     }
   };
 
+  const handleSizeChange = (index: number, value: string) => {
+    const newSizes = [...sizes];
+    newSizes[index] = value;
+    setSizes(newSizes);
+  };
+
+  const addSizeField = () => {
+    setSizes([...sizes, ""]);
+  };
+
+  const removeSizeField = (index: number) => {
+    const newSizes = sizes.filter((_, i) => i !== index);
+    setSizes(newSizes);
+  };
+
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -49,8 +64,11 @@ const NewProduct = () => {
     formData.set("stock", stock.toString());
     formData.set("photo", photo);
     formData.set("category", category);
-    formData.set("sizes", sizes.join(','));
     formData.set("description", description);
+
+    sizes.forEach(size => {
+      formData.append("sizes", size);
+    });
 
     const res = await newProduct({ id: user?._id!, formData });
 
@@ -94,9 +112,6 @@ const NewProduct = () => {
                 onChange={(e) => setStock(Number(e.target.value))}
               />
             </div>
-
-
-
             <div>
               <label>Category</label>
               <input
@@ -109,15 +124,24 @@ const NewProduct = () => {
             </div>
             <div>
               <label>Sizes</label>
-              <input
-                required
-                type="text"
-                placeholder="Sizes"
-                value={sizes}
-                onChange={(e) => setSizes([e.target.value])}
-              />
+              {sizes.map((size, index) => (
+                <div key={index}>
+                  <input
+                    required
+                    type="text"
+                    placeholder="Size"
+                    value={size}
+                    onChange={(e) => handleSizeChange(index, e.target.value)}
+                  />
+                  {sizes.length > 1 && (
+                    <button type="button" onClick={() => removeSizeField(index)}>
+                      Remove
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button type="button" onClick={addSizeField}>Add Size</button>
             </div>
-
             <div>
               <label>Description</label>
               <input
@@ -128,12 +152,10 @@ const NewProduct = () => {
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
-
             <div>
               <label>Photo</label>
               <input required type="file" onChange={changeImageHandler} />
             </div>
-
             {photoPrev && <img src={photoPrev} alt="New Image" />}
             <button type="submit">Create</button>
           </form>
